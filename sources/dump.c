@@ -86,7 +86,7 @@ API void _dump(value_t val) {
       while (node.type == PairType) {
         pair_t pair = get_pair(node);
         if (eq(pair.left, val)) {
-          print(CPAREN"("CSEP"..."CPAREN")");
+          print(CPAREN "(" CSEP "..." CPAREN ")");
           return;
         }
         node = pair.right;
@@ -167,7 +167,7 @@ API void dump_pair(pair_t pair) {
   _dump(pair.left);
   print(CSEP" . ");
   _dump(pair.right);
-  print(CPAREN")"COFF"\n");
+  print(CPAREN ")" COFF "\n");
 }
 
 API void dump_line(value_t val) {
