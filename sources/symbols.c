@@ -8,7 +8,7 @@
 static char *symbols;
 static size_t symbols_len;
 static const builtin_t *builtins;
-API int first_fn;
+// API int first_fn;  // redefinition
 
 API void symbols_init(const builtin_t *fns, int numKeywords) {
   builtins = fns;
@@ -20,7 +20,7 @@ static void symbols_resize(size_t needed) {
   // Allocate memory in blocks to reduce fragmentation
   // and batch allocations.
   size_t new_len = needed + (SYMBOLS_BLOCK_SIZE - needed % SYMBOLS_BLOCK_SIZE);
-  symbols = realloc(symbols, new_len);
+  symbols = (char*) realloc(symbols, new_len);
   for (size_t j = symbols_len; j < new_len; j++) {
     symbols[j] = 0;
   }

@@ -1,6 +1,10 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -81,15 +85,15 @@ API void dump_line(value_t val);
 API void dump_pair(pair_t pair);
 
 // Data
-#define EmptySlot ((value_t){.type = AtomType, .data = -10})
-#define RangeError ((value_t){.type = AtomType, .data = -5})
-#define TypeError ((value_t){.type = AtomType, .data = -4})
-#define Dot ((value_t){.type = AtomType, .data = -3})
-#define Undefined ((value_t){.type = AtomType, .data = -2})
-#define Free ((pair_t){.left = EmptySlot, .right = EmptySlot})
-#define Nil ((value_t){.type = AtomType,.data = -1})
-#define False ((value_t){.type = AtomType,.data = 0})
-#define True ((value_t){.type = AtomType,.data = 1})
+#define EmptySlot ((value_t){{.gc = 0, .type = AtomType, .data = -10}})
+#define RangeError ((value_t){{.gc = 0, .type = AtomType, .data = -5}})
+#define TypeError ((value_t){{.gc = 0, .type = AtomType, .data = -4}})
+#define Dot ((value_t){{.gc = 0, .type = AtomType, .data = -3}})
+#define Undefined ((value_t){{.gc = 0, .type = AtomType, .data = -2}})
+#define Free ((pair_t){{.left = EmptySlot, .right = EmptySlot}})
+#define Nil ((value_t){{.gc = 0, .type = AtomType, .data = -1}})
+#define False ((value_t){{.gc = 0, .type = AtomType, .data = 0}})
+#define True ((value_t){{.gc = 0, .type = AtomType, .data = 1}})
 #define List(...) __extension__({\
   value_t values[] = { __VA_ARGS__ }; \
   value_t node = Nil; \
@@ -158,5 +162,8 @@ API value_t table_adel(value_t map, value_t keys);
 typedef void (*callback_t)(value_t ctx, value_t item);
 API void iter_any(value_t iter, value_t ctx, callback_t fn);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

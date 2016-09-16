@@ -66,24 +66,27 @@ API value_t Bool(bool val) {
 }
 
 API value_t Integer(int32_t val) {
-  return (value_t){
+  return (value_t){{
+    .gc = 0, 
     .type = IntegerType,
     .data = val
-  };
+  }};
 }
 
 API value_t Symbol(const char* sym) {
-  return (value_t){
+  return (value_t){{
+    .gc = 0,
     .type = SymbolType,
     .data = symbols_set(sym, 0)
-  };
+  }};
 }
 
 API value_t SymbolRange(const char* sym, const char* end) {
-  return (value_t){
+  return (value_t){{
+    .gc = 0,
     .type = SymbolType,
     .data = symbols_set(sym, end - sym)
-  };
+  }};
 }
 
 static int find_pair_slot() {
@@ -100,7 +103,7 @@ static int find_pair_slot() {
     // Allocate memory in blocks to reduce fragmentation
     // and batch allocations.
     int new_len = needed + (PAIRS_BLOCK_SIZE - needed % PAIRS_BLOCK_SIZE);
-    pairs = realloc(pairs, (size_t)new_len * sizeof(pair_t));
+    pairs = (pair_t*) realloc(pairs, (size_t)new_len * sizeof(pair_t));
     for (int j = num_pairs; j < new_len; j++) {
       pairs[j] = Free;
     }
@@ -114,14 +117,15 @@ API value_t cons(value_t left, value_t right) {
   // For now the GC bits are set to zero.
   // When we write the GC later this may change.
   int slot = find_pair_slot();
-  pairs[slot] = (pair_t){
+  pairs[slot] = (pair_t){{
     .left = left,
     .right = right
-  };
-  return (value_t){
+  }};
+  return (value_t){{
+    .gc = 0,
     .type = PairType,
     .data = slot
-  };
+  }};
 }
 
 API value_t car(value_t var) {
@@ -145,10 +149,10 @@ API bool set_cdr(value_t var, value_t val) {
 }
 
 API pair_t get_pair(value_t slot) {
-  return (slot.type == PairType) ? pairs[slot.data] : (pair_t){
-    .right = TypeError,
+  return (slot.type == PairType) ? pairs[slot.data] : (pair_t){{
     .left = TypeError,
-  };
+    .right = TypeError,
+  }};
 }
 
 API value_t next(value_t *args) {

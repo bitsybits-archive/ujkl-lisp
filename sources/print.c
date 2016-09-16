@@ -10,7 +10,7 @@ static size_t write_index;
 static bool needFlush;
 
 API void print_flush() {
-  write(1, write_buffer, write_index);
+  writeme(write_buffer, write_index);
   write_index = 0;
   needFlush = false;
 }
