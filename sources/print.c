@@ -2,7 +2,7 @@
 #define PRINT_C
 
 #include "types.h"
-#include <unistd.h> // for write syscall
+#include "defines.h"
 
 static char write_buffer[WRITE_BUFFER_LENGTH];
 static size_t write_index;
@@ -10,7 +10,7 @@ static size_t write_index;
 static bool needFlush;
 
 API void print_flush() {
-  writeme(write_buffer, write_index);
+  _write(write_buffer, write_index);
   write_index = 0;
   needFlush = false;
 }
