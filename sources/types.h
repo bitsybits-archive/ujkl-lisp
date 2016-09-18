@@ -1,10 +1,6 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -161,9 +157,5 @@ API value_t table_adel(value_t map, value_t keys);
 // Iterators
 typedef void (*callback_t)(value_t ctx, value_t item);
 API void iter_any(value_t iter, value_t ctx, callback_t fn);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

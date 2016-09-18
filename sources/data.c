@@ -8,6 +8,11 @@ static pair_t *pairs;
 static int next_pair;
 static int num_pairs;
 
+void free_data_pairs() {
+  free(pairs);
+  pairs = NULL;
+  next_pair = num_pairs = 0;
+}
 
 API value_t copy(value_t value) {
   if (value.type != PairType) return value;
@@ -52,8 +57,10 @@ API int collectgarbage(value_t root) {
     if (pairs[i].raw == Free.raw) {
       continue;
     }
+#ifdef UJKL_DEBUG
     print("collected: ");
     dump_pair(pairs[i]);
+#endif // UJKL_DEBUG
     pairs[i].raw = Free.raw;
     next_pair = i;
     num_freed++;

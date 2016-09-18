@@ -10,6 +10,13 @@ static size_t symbols_len;
 static const builtin_t *builtins;
 // API int first_fn;  // redefinition
 
+void symbols_clean_user_table()
+{
+  free(symbols);
+  symbols = NULL;
+  symbols_len = 0;
+}
+
 API void symbols_init(const builtin_t *fns, int numKeywords) {
   builtins = fns;
   first_fn = numKeywords;

@@ -10,6 +10,7 @@ void _write(char *buf, size_t nbyte) {
 #include <Arduino.h> // for Serial obj
 void _write(char *buf, size_t nbyte) {
   Serial.write(buf, nbyte);
+  yield();
 }
 #endif
 
