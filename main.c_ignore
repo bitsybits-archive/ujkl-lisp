@@ -584,6 +584,46 @@ static value_t _iter_filter(value_t args) {
   return list_ireverse(free_cell(ctx).right);
 }
 
+static value_t _if(value_t args) {
+  value_t cond = next(&args);
+  value_t if_true = next(&args);
+  value_t if_false = next(&args);
+  return (eq(cond, True)) ? if_true : if_false;
+}
+
+static value_t _apply(value_t args) {
+  value_t fn = next(&args);
+  value_t list = next(&args);
+  if (!is_list(list)) return TypeError;
+  return apply(fn, list);
+}
+
+static value_t _next(value_t args) {
+  return next(&args);
+}
+
+static value_t _not(value_t args) {
+  return Bool(!isTruthy(next(&args)));
+}
+
+static value_t _or(value_t args) {
+  while (args.type == PairType) {
+    if (isTruthy(next(&args))) return True;
+  }
+  return False;
+}
+
+static value_t _and(value_t args) {
+  while (args.type == PairType) {
+    if (!isTruthy(next(&args))) return False;
+  }
+  return True;
+}
+
+static value_t _xor(value_t args) {
+  return Bool(isTruthy(next(&args)) ^ isTruthy(next(&args)));
+}
+
 static const builtin_t *functions = (const builtin_t[]){
   {"get", _get},
   {"has", _has},
@@ -642,6 +682,15 @@ static const builtin_t *functions = (const builtin_t[]){
   {"each", _iter_each},
   {"map", _iter_map},
   {"filter", _iter_filter},
+
+  {"if", _if},
+  {"apply", _apply},
+  {"next", _next},
+
+  {"!", _not},
+  {"|", _or},
+  {"&", _and},
+  {"^", _xor},
 
   {0,0},
 };
