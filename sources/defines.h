@@ -7,11 +7,13 @@ void _write(char *buf, size_t nbyte) {
   write(1, buf, nbyte);
 }
 #else
+#ifndef UJKL_CUSTOM_WRITE
 #include <Arduino.h> // for Serial obj
 void _write(char *buf, size_t nbyte) {
   Serial.write(buf, nbyte);
   yield();
 }
-#endif
+#endif // UJKL_CUSTOM_WRITE
+#endif // UNIX
 
 #endif // DEFINES_H

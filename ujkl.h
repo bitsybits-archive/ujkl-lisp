@@ -24,7 +24,10 @@ extern "C" {
 #define SYMBOLS_BLOCK_SIZE 128
 #define PAIRS_BLOCK_SIZE 16
 
+#ifdef API
 #undef API
+#endif
+
 #define API static
 
 API value_t repl;
@@ -710,6 +713,10 @@ API const builtin_t *functions = (const builtin_t[]){
   {"&", _and},
   {"^", _xor},
 
+#ifdef UJKL_EXTERN_FN
+  UJKL_EXTERN_FN
+#endif
+
   {0,0},
 };
 
@@ -734,7 +741,7 @@ API const char** lines = (const char*[]) {
 API void init_repl(){
   // Initialize repl environment with a version variable and ref to self.
   repl = table_set(Nil, Symbol("env"), Nil);
-  // table_set(repl, Symbol("env"), repl);
+  table_set(repl, Symbol("env"), repl);
   // table_set(repl, Symbol("version"), Symbol(VM_VERSION));
 }
 
