@@ -645,7 +645,7 @@ static value_t _xor(value_t args) {
   return Bool(isTruthy(next(&args)) ^ isTruthy(next(&args)));
 }
 
-API const builtin_t *functions = (const builtin_t[]){
+API const builtin_t functions[] = {
   {"get", _get},
   {"has", _has},
   {"del", _del},
@@ -713,12 +713,30 @@ API const builtin_t *functions = (const builtin_t[]){
   {"&", _and},
   {"^", _xor},
 
-#ifdef UJKL_EXTERN_FN
-  UJKL_EXTERN_FN
-#endif
-
   {0,0},
 };
+
+API void init_repl(){
+  // Initialize repl environment with a version variable and ref to self.
+  repl = table_set(Nil, Symbol("env"), Nil);
+  table_set(repl, Symbol("env"), repl);
+  // table_set(repl, Symbol("version"), Symbol(VM_VERSION));
+}
+
+void init_ujkl(const builtin_t *user_fns = NULL) {
+  symbols_init(functions, user_fns, sizeof(functions) / sizeof(builtin_t), 7);
+  quoteSym = Symbol("quote");
+  listSym = Symbol("list");
+  init_repl();
+}
+
+void restart_ujkl() {
+  free_list(repl);
+  collectgarbage(repl);
+  symbols_clean_user_table();
+  free_data_pairs();
+  init_repl();
+}
 
 #ifdef UJKL_DEBUG
 API const char** lines = (const char*[]) {
@@ -736,31 +754,7 @@ API const char** lines = (const char*[]) {
   "(greet jack)",
   0
 };
-#endif // UJKL_DEBUG
 
-API void init_repl(){
-  // Initialize repl environment with a version variable and ref to self.
-  repl = table_set(Nil, Symbol("env"), Nil);
-  table_set(repl, Symbol("env"), repl);
-  // table_set(repl, Symbol("version"), Symbol(VM_VERSION));
-}
-
-void init_ujkl() {
-  symbols_init(functions, 7);
-  quoteSym = Symbol("quote");
-  listSym = Symbol("list");
-  init_repl();
-}
-
-void restart_ujkl() {
-  free_list(repl);
-  collectgarbage(repl);
-  symbols_clean_user_table();
-  free_data_pairs();
-  init_repl();
-}
-
-#ifdef UJKL_DEBUG
 void parse_debug_line(int i) {
   parse(lines[i]);
 }

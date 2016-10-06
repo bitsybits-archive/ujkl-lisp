@@ -8,6 +8,8 @@
 static char *symbols;
 static size_t symbols_len;
 static const builtin_t *builtins;
+static const builtin_t *user_builtins;
+static uint8_t user_idx;
 // API int first_fn;  // redefinition
 
 void symbols_clean_user_table()
@@ -17,9 +19,11 @@ void symbols_clean_user_table()
   symbols_len = 0;
 }
 
-API void symbols_init(const builtin_t *fns, int numKeywords) {
+API void symbols_init(const builtin_t *fns, const builtin_t *user_fns, uint8_t free_user_idx, int num_keywords) {
   builtins = fns;
-  first_fn = numKeywords;
+  user_builtins = user_fns;
+  user_idx = free_user_idx;
+  first_fn = num_keywords;
 }
 
 static void symbols_resize(size_t needed) {
@@ -35,13 +39,19 @@ static void symbols_resize(size_t needed) {
 }
 
 API api_fn symbols_get_fn(int index) {
-  return index >= 0 ? builtins[index].fn : 0;
+  return (index >= 0) ?
+  ((index >= user_idx) ? 
+    user_builtins[index - user_idx].fn 
+    : builtins[index].fn) 
+  : 0;
 }
 
 // Resolve a symbol index to a null-terminated string.
 API const char *symbols_get_name(int index) {
-  if (index >= 0) {
+  if (index >= 0 && index < user_idx) {
     return builtins[index].name;
+  } else if(index >= user_idx) {
+    return user_builtins[index - user_idx].name;
   }
   const char *names = symbols;
   while (++index) {
@@ -60,13 +70,19 @@ API int symbols_set(const char *word, size_t len) {
   // First try to match against builtins and return positive index if found.
   int idx = 0;
   const char *name;
-  while ((name = builtins[idx].name)) {
-    size_t j = 0;
-    while (name[j] && j < len && word[j] == name[j]) { j++; }
-    if (j == len && name[j] == 0) {
-      return idx;
+  const builtin_t *fns = builtins;
+  int step = 0;
+  while (fns) {
+    while ((name = fns[idx - step].name)) {
+      size_t j = 0;
+      while (name[j] && j < len && word[j] == name[j]) { j++; }
+      if (j == len && name[j] == 0) {
+        return idx;
+      }
+      idx++;
     }
-    idx++;
+    fns = (0 == step) ? user_builtins : NULL;
+    step = idx = user_idx;
   }
   idx = -1;
 

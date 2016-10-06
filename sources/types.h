@@ -68,7 +68,7 @@ API void print_flush();
 
 // Symbol library for resolving between integers and cstrings.
 API int first_fn;
-API void symbols_init(const builtin_t *fns, int numKeywords);
+API void symbols_init(const builtin_t *fns, const builtin_t *user_fns, uint8_t free_user_idx, int num_keywords);
 API int symbols_set(const char *word, size_t len);
 API const char *symbols_get_name(int index);
 API api_fn symbols_get_fn(int index);
