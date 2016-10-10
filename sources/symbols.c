@@ -19,11 +19,16 @@ void symbols_clean_user_table()
   symbols_len = 0;
 }
 
-API void symbols_init(const builtin_t *fns, const builtin_t *user_fns, uint8_t free_user_idx, int num_keywords) {
+API void symbols_init(const builtin_t *fns, int num_keywords) {
   builtins = fns;
+  user_builtins = NULL;
+  user_idx = 255;
+  first_fn = num_keywords;
+}
+
+API void symbols_set_user_fns(const builtin_t *user_fns, uint8_t free_user_idx) {
   user_builtins = user_fns;
   user_idx = free_user_idx;
-  first_fn = num_keywords;
 }
 
 static void symbols_resize(size_t needed) {

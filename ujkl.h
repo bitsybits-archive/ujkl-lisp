@@ -723,11 +723,15 @@ API void init_repl(){
   // table_set(repl, Symbol("version"), Symbol(VM_VERSION));
 }
 
-void init_ujkl(const builtin_t *user_fns = NULL) {
-  symbols_init(functions, user_fns, sizeof(functions) / sizeof(builtin_t), 7);
+void init_ujkl() {
+  symbols_init(functions, 7);
   quoteSym = Symbol("quote");
   listSym = Symbol("list");
   init_repl();
+}
+
+void set_ujkl_user_fns(const builtin_t *user_fns) {
+  symbols_set_user_fns(user_fns, user_fns ? sizeof(functions) / sizeof(builtin_t) : 255);
 }
 
 void restart_ujkl() {
