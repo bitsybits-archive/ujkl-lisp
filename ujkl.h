@@ -717,9 +717,8 @@ API const builtin_t functions[] = {
 };
 
 API void init_repl(){
-  // Initialize repl environment with a version variable and ref to self.
+  // Initialize repl environment with a version variable
   repl = table_set(Nil, Symbol("env"), Nil);
-  table_set(repl, Symbol("env"), repl);
   // table_set(repl, Symbol("version"), Symbol(VM_VERSION));
 }
 
