@@ -24,13 +24,8 @@ extern "C" {
 #define SYMBOLS_BLOCK_SIZE 128
 #define PAIRS_BLOCK_SIZE 16
 
-#ifdef API
-#undef API
-#endif
-
-#define API static
-
 API value_t repl;
+API value_t quoteSym, listSym;
 
 // Look for dots and parse into list of symbols if found.
 API value_t getSymbols(const char* start, const char* end) {

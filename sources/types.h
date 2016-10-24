@@ -57,7 +57,7 @@ typedef struct {
   api_fn fn;
 } builtin_t;
 
-API value_t quoteSym, listSym;
+API extern value_t quoteSym, listSym;
 
 // Print library so we don't need a full-blown printf.
 API bool print(const char* value);
@@ -67,7 +67,7 @@ API bool print_string(const char* value, size_t len);
 API void print_flush();
 
 // Symbol library for resolving between integers and cstrings.
-API int first_fn;
+API extern int first_fn;
 API void symbols_init(const builtin_t *fns, int num_keywords);
 API void symbols_set_user_fns(const builtin_t *user_fns, uint8_t free_user_idx);
 API int symbols_set(const char *word, size_t len);

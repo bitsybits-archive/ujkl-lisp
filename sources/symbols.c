@@ -10,7 +10,7 @@ static size_t symbols_len;
 static const builtin_t *builtins;
 static const builtin_t *user_builtins;
 static uint8_t user_idx;
-// API int first_fn;  // redefinition
+API int first_fn;
 
 void symbols_clean_user_table()
 {
