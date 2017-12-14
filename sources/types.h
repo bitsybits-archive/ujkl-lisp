@@ -91,6 +91,7 @@ API void dump_pair(pair_t pair);
 #define Nil ((value_t){{.gc = 0, .type = AtomType, .data = -1}})
 #define False ((value_t){{.gc = 0, .type = AtomType, .data = 0}})
 #define True ((value_t){{.gc = 0, .type = AtomType, .data = 1}})
+#if 0
 #define List(...) __extension__({\
   value_t values[] = { __VA_ARGS__ }; \
   value_t node = Nil; \
@@ -98,6 +99,7 @@ API void dump_pair(pair_t pair);
     node = cons(values[i], node); \
   } \
   node; })
+#endif
 #define Mapping(name, value) cons(Symbol(#name),value)
 API value_t copy(value_t value);
 API value_t free_list(value_t node);
