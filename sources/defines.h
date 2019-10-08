@@ -10,7 +10,9 @@ void _write(char *buf, size_t nbyte) {
 #ifndef UJKL_CUSTOM_WRITE
 #include <Arduino.h> // for Serial obj
 void _write(char *buf, size_t nbyte) {
+#ifdef __cplusplus
   Serial.write(buf, nbyte);
+#endif
   yield();
 }
 #endif // UJKL_CUSTOM_WRITE
